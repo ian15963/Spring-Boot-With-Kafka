@@ -26,9 +26,13 @@ public class ProducerKafkaController {
     }
 
     @GetMapping("/send")
-    public ResponseEntity<?> send(){
+    public void send(){
         IntStream.range(1, 10).boxed().forEach(n -> kafkaTemplate.send("topic-1", "Mensagem: " + n));
-        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/send-2")
+    public void send2(){
+        kafkaTemplate.send("my-topic", "Teste");
     }
 
     @GetMapping("/send-person")
