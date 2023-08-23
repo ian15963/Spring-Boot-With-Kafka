@@ -1,6 +1,7 @@
 package com.example.consumer.listener;
 
 import com.example.consumer.custom.PersonCustomListener;
+import com.example.consumer.model.City;
 import com.example.consumer.model.Person;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaListener;
@@ -23,12 +24,14 @@ public class TestListener {
         log.info(message);
         log.info("Topic: {}, Partition Id: {}, timestamp: {}", metadata.topic(), metadata.partition(), metadata.timestamp());
     }
-    
+
+    //Escutando partições específicas
     @KafkaListener(topicPartitions = {@TopicPartition(topic = "my-topic", partitions = "0")}, groupId = "my-group")
     public void listen2(String message, @Header(KafkaHeaders.RECEIVED_PARTITION) int partition){
         log.info("Partition 0: {}, Message: {}", partition, message);
     }
 
+    //Escutando partições específicas
     @KafkaListener(topicPartitions = {@TopicPartition(topic = "my-topic", partitions = "1-9")}, groupId = "my-group")
     public void listen3(String message, @Header(KafkaHeaders.RECEIVED_PARTITION) int partition){
         log.info("Partition 1-9: {}, Message: {}", partition, message);
@@ -38,5 +41,10 @@ public class TestListener {
    @PersonCustomListener(groupId = "group-1")
     public void listen(Person person){
         log.info("Pessoa: {}", person);
+    }
+
+    @KafkaListener(topics = "city-topic", groupId = "group-1", containerFactory = "jsonConcurrentKafkaListenerContainerFactory")
+    public void listen(City city){
+        log.info("Cidade: {}", city);
     }
 }

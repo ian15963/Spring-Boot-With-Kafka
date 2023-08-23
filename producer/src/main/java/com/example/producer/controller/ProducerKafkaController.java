@@ -1,5 +1,6 @@
 package com.example.producer.controller;
 
+import com.example.producer.model.City;
 import com.example.producer.model.Person;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -38,6 +39,11 @@ public class ProducerKafkaController {
     @GetMapping("/send-person")
     public void sendPerson(){
         jsonKafkaTemplate.send("topic-person", new Person("Ian", 15));
+    }
+
+    @GetMapping("/send-city")
+    public void sendCity(){
+        jsonKafkaTemplate.send("topic-person", new City("Brejões", "BA"));
     }
 
 

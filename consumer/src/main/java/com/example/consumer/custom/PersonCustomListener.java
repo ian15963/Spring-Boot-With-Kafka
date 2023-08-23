@@ -20,6 +20,6 @@ public @interface PersonCustomListener {
     String topics() default "topic-person";
 
     @AliasFor(annotation = KafkaListener.class, attribute = "containerFactory")
-    String containerFactory() default "personKafkaListenerContainerFactory";
+    String containerFactory() default "jsonConcurrentKafkaListenerContainerFactory";
 
 }
