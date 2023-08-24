@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.Random;
 import java.util.stream.IntStream;
 
 @RestController
@@ -38,12 +39,13 @@ public class ProducerKafkaController {
 
     @GetMapping("/send-person")
     public void sendPerson(){
-        jsonKafkaTemplate.send("topic-person", new Person("Ian", 15));
+        Random random = new Random();
+        jsonKafkaTemplate.send("person-topic", new Person("Ian", random.nextInt(51)));
     }
 
     @GetMapping("/send-city")
     public void sendCity(){
-        jsonKafkaTemplate.send("topic-person", new City("Brejões", "BA"));
+        jsonKafkaTemplate.send("city-topic", new City("Brejões", "BA"));
     }
 
 
