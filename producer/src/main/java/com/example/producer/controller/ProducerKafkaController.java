@@ -5,6 +5,7 @@ import com.example.producer.model.Person;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.kafka.core.RoutingKafkaTemplate;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -18,13 +19,12 @@ import java.util.stream.IntStream;
 @RequestMapping("/kafka/producer")
 public class ProducerKafkaController {
 
-    private KafkaTemplate<String, String> kafkaTemplate;
-    private KafkaTemplate<String, Serializable> jsonKafkaTemplate;
-
+//    private KafkaTemplate<String, String> kafkaTemplate;
+//    private KafkaTemplate<String, Serializable> jsonKafkaTemplate;
+      private RoutingKafkaTemplate kafkaTemplate;
     @Autowired
-    public ProducerKafkaController(KafkaTemplate<String, String> kafkaTemplate, KafkaTemplate<String, Serializable> jsonKafkaTemplate) {
+    public ProducerKafkaController(RoutingKafkaTemplate kafkaTemplate) {
         this.kafkaTemplate = kafkaTemplate;
-        this.jsonKafkaTemplate = jsonKafkaTemplate;
     }
 
     @GetMapping("/send")
@@ -32,20 +32,20 @@ public class ProducerKafkaController {
         IntStream.range(1, 10).boxed().forEach(n -> kafkaTemplate.send("topic-1", "Mensagem: " + n));
     }
 
-    @GetMapping("/send-2")
-    public void send2(){
-        kafkaTemplate.send("my-topic", "Teste");
-    }
+//    @GetMapping("/send-2")
+//    public void send2(){
+//        kafkaTemplate.send("my-topic", "Teste");
+//    }
 
     @GetMapping("/send-person")
     public void sendPerson(){
         Random random = new Random();
-        jsonKafkaTemplate.send("person-topic", new Person("Ian", random.nextInt(51)));
+        kafkaTemplate.send("person-topic", new Person("Ian", random.nextInt(51)));
     }
 
     @GetMapping("/send-city")
     public void sendCity(){
-        jsonKafkaTemplate.send("city-topic", new City("Brejões", "BA"));
+        kafkaTemplate.send("city-topic", new City("Brejões", "BA"));
     }
 
 

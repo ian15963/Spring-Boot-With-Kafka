@@ -11,17 +11,19 @@ import org.springframework.kafka.support.KafkaHeaders;
 import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 @Component
 @Slf4j
 public class TestListener {
 
-    @KafkaListener(topics = "topic-x", groupId = "group-1")
-    public void listen(String message,
+    @KafkaListener(topics = "topic-1", groupId = "group-1")
+    public void listen(List<String> messages,
                        //@Header(KafkaHeaders.RECEIVED_TOPIC) String topic,
                        //@Header(KafkaHeaders.RECEIVED_PARTITION) int partition
                        ConsumerRecordMetadata metadata){
         //log.info("Thread: {}", Thread.currentThread().getId());
-        log.info(message);
+        log.info(messages.toString());
         log.info("Topic: {}, Partition Id: {}, timestamp: {}", metadata.topic(), metadata.partition(), metadata.timestamp());
     }
 
@@ -44,7 +46,7 @@ public class TestListener {
     }
 
     @KafkaListener(topics = "city-topic", groupId = "group-1", containerFactory = "jsonConcurrentKafkaListenerContainerFactory")
-    public void listen(City city){
-        log.info("Cidade: {}", city);
+    public void listen(List<City> cities){
+        log.info("Cidades: {}", cities);
     }
 }
