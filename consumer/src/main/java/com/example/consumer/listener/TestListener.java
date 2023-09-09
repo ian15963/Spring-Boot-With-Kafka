@@ -8,6 +8,7 @@ import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.annotation.TopicPartition;
 import org.springframework.kafka.listener.adapter.ConsumerRecordMetadata;
 import org.springframework.kafka.support.KafkaHeaders;
+import org.springframework.messaging.Message;
 import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.stereotype.Component;
 
@@ -46,7 +47,15 @@ public class TestListener {
     }
 
     @KafkaListener(topics = "city-topic", groupId = "group-1", containerFactory = "jsonConcurrentKafkaListenerContainerFactory")
-    public void listen(List<City> cities){
-        log.info("Cidades: {}", cities);
+    public void listen(List<Message<City>> messages
+      //                       List<City> cities,
+      //                     @Header(KafkaHeaders.RECEIVED_PARTITION) List<Long> partitions
+    ){
+//        log.info("Cidades: {}", cities);
+//        log.info("Partitions: {}", partitions);
+        log.info("messages: {}", messages);
+        var city = messages.get(0).getPayload();
+        log.info("City: {}", city);
+        log.info("Headers: {}", messages.get(0).getHeaders());
     }
 }
