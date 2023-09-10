@@ -44,6 +44,7 @@ public class TestListener {
    @PersonCustomListener(groupId = "group-1")
     public void listen(Person person){
         log.info("Pessoa: {}", person);
+        throw new IllegalArgumentException("Teste");
     }
 
     @KafkaListener(topics = "city-topic", groupId = "group-1", containerFactory = "jsonConcurrentKafkaListenerContainerFactory")

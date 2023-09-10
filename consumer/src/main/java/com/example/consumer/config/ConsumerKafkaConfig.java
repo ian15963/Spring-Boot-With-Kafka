@@ -2,7 +2,9 @@ package com.example.consumer.config;
 
 import com.example.consumer.model.Person;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.kafka.clients.consumer.Consumer;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
+import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.apache.kafka.common.serialization.StringSerializer;
 import org.springframework.boot.autoconfigure.kafka.KafkaProperties;
@@ -62,8 +64,28 @@ public class ConsumerKafkaConfig {
     public ConcurrentKafkaListenerContainerFactory<String, Person> personKafkaListenerContainerFactory(){
         var factory =  new ConcurrentKafkaListenerContainerFactory<String, Person>();
         factory.setConsumerFactory(personConsumerFactory());
-        factory.setRecordInterceptor(adultInterceptor());
+        factory.setRecordInterceptor(exampleInterceptor());
+//        factory.setRecordInterceptor(adultInterceptor());
         return factory;
+    }
+
+    private RecordInterceptor<String, Person> exampleInterceptor() {
+        return new RecordInterceptor<String, Person>() {
+            @Override
+            public ConsumerRecord<String, Person> intercept(ConsumerRecord<String, Person> consumerRecord, Consumer<String, Person> consumer) {
+                return consumerRecord;
+            }
+
+            @Override
+            public void success(ConsumerRecord<String, Person> record, Consumer<String, Person> consumer) {
+                log.info("Sucesso");
+            }
+
+            @Override
+            public void failure(ConsumerRecord<String, Person> record, Exception exception, Consumer<String, Person> consumer) {
+                log.info("Falha");
+            }
+        };
     }
 
     //Interceptor decide se vai consumir a informação de uma partição de um determinado tópico.
